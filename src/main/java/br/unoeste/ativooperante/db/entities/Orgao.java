@@ -19,8 +19,7 @@ public class Orgao {
 
     public Orgao()
     {
-        this.id = 0L;
-        this.nome = "";
+        this(0L,"");
     }
 
     public Long getId() {

@@ -20,7 +20,6 @@ public class Tipo {
 
     public Tipo()
     {
-        this.id = 0L;
-        this.nome = "";
+        this(0L,"");
     }
 }

@@ -15,12 +15,12 @@ public class Usuario {
     @Column(name = "usu_email")
     private String email;
     @Column(name = "usu_senha")
-    private int senha;
+    private String senha;
     @Column(name = "usu_nivel")
     private int nivel;
 
 
-    public Usuario(Long id, String cpf, String email, int senha, int nivel) {
+    public Usuario(Long id, String cpf, String email, String senha, int nivel) {
         this.id = id;
         this.cpf = cpf;
         this.email = email;
@@ -30,10 +30,6 @@ public class Usuario {
 
     public Usuario()
     {
-        this.id = 0L;
-        this.cpf = "";
-        this.email = "";
-        this.senha = 0;
-        this.nivel = 0;
+        this(0L,"","","",0);
     }
 }
