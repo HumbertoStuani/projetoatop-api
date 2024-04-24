@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "apis/admin/")
+@RequestMapping(value = "api/admin/")
 public class AdminRestController {
 
     @Autowired
@@ -22,7 +22,7 @@ public class AdminRestController {
     // demais api
 
 
-    @GetMapping("/delete-orgao")
+    @DeleteMapping("/delete-orgao")
     public void excluirOrgao(@RequestParam(value = "id") Long id) {
         orgaorepo.deleteById(id);
     }

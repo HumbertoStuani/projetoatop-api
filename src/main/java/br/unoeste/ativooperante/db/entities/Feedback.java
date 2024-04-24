@@ -10,7 +10,7 @@ public class Feedback {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "fee_id")
     private Long id;
-    @Column(name = "free_texto")
+    @Column(name = "fee_texto")
     private String texto;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "den_id")

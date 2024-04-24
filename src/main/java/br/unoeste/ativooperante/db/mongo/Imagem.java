@@ -1,4 +1,4 @@
-package br.unoeste.ativooperante.db.mongo.model;
+package br.unoeste.ativooperante.db.mongo;
 
 import br.unoeste.ativooperante.db.entities.Denuncia;
 import org.springframework.data.annotation.Id;
@@ -9,17 +9,17 @@ public class Imagem {
 
     @Id
     private String id;
-    private Denuncia denuncia;
+    private long id_denuncia;
     private byte[] dados;
 
-    public Imagem(String id, Denuncia denuncia, byte[] dados) {
+    public Imagem(String id, long id_denuncia, byte[] dados) {
         this.id = id;
-        this.denuncia = denuncia;
+        this.id_denuncia = id_denuncia;
         this.dados = dados;
     }
 
     public Imagem() {
-        this("",null,null);
+        this("",0L,null);
     }
 
     public String getId() {
@@ -30,12 +30,12 @@ public class Imagem {
         this.id = id;
     }
 
-    public Denuncia getDenuncia() {
-        return denuncia;
+    public long getIdDenuncia() {
+        return id_denuncia;
     }
 
-    public void setDenuncia(Denuncia denuncia) {
-        this.denuncia = denuncia;
+    public void setIdDenuncia(long id_denuncia) {
+        this.id_denuncia = id_denuncia;
     }
 
     public byte[] getDados() {
