@@ -1,12 +1,8 @@
 package br.unoeste.ativooperante.controllers;
 
-import br.unoeste.ativooperante.db.entities.Denuncia;
 import br.unoeste.ativooperante.db.mongo.Imagem;
-import br.unoeste.ativooperante.db.repository.ImagemRepository;
+import br.unoeste.ativooperante.services.ImagemService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,22 +17,20 @@ import java.io.IOException;
 public class ImagemRestController {
 
     @Autowired
-    private ImagemRepository imagemRepository;
-    @Autowired
-    private MongoTemplate mongoTemplate;
+    private ImagemService imagemService;
 
-    @GetMapping(value = "/exibir/{id}")
-    public ResponseEntity<byte[]> recuperarImagemPorDenuncia(@PathVariable long id) {
-        Query query = new Query(Criteria.where("id_denuncia").is(id));
-        Imagem imagem = mongoTemplate.findOne(query, Imagem.class);
-        if (imagem != null && imagem.getDados() != null)
+
+    @GetMapping(value = "/denuncia/{id}")
+    public ResponseEntity<byte[]> getByDenuncia(@PathVariable long id) {
+        Imagem imagem = this.imagemService.findByDenuncia(id);
+        if(imagem != null)
             return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imagem.getDados());
         return ResponseEntity.notFound().build();
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public @ResponseBody byte[] recuperarImagem(@PathVariable String id) {
-        Imagem imagem = imagemRepository.findById(id).orElse(null);
+    public @ResponseBody byte[] getImagem(@PathVariable String id) {
+        Imagem imagem = this.imagemService.findById(id);
         if (imagem == null)
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Imagem não encontrada");
         return imagem.getDados();
@@ -47,12 +41,15 @@ public class ImagemRestController {
         Imagem imagem = new Imagem();
         imagem.setDados(file.getBytes());
         imagem.setIdDenuncia(id_denuncia);
-        imagemRepository.save(imagem);
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imagem.getDados());
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(this.imagemService.save(imagem).getDados());
     }
+
     @DeleteMapping("/{id}")
-    public void deletarImagem(@PathVariable String id) {
-        imagemRepository.deleteById(id);
+    public ResponseEntity<Boolean> deletarImagem(@PathVariable String id) {
+        boolean deleted = this.imagemService.deleteById(id);
+        if(deleted)
+            return ResponseEntity.ok(true);
+        return ResponseEntity.notFound().build();
     }
 
 }
