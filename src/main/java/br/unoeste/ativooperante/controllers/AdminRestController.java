@@ -17,9 +17,6 @@ public class AdminRestController {
     @Autowired
     OrgaoService orgaoService;
 
-    @Autowired
-    DenunciaRepository denunciarepo;
-
     @GetMapping(value = "teste-admin")
     public String testeadm() {
         return "conectado";
