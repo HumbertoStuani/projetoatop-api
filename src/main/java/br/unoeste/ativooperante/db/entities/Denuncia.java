@@ -47,7 +47,7 @@ public class Denuncia {
 
     public Denuncia ()
     {
-        this(0L,"","",0,null,null,null,null);
+        this(0L,"","",0,LocalDate.now(),null,null,null);
     }
 
     public Long getId() {
