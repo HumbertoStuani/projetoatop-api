@@ -1,6 +1,5 @@
 package br.unoeste.ativooperante.db.mongo;
 
-import br.unoeste.ativooperante.db.entities.Denuncia;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,14 +11,13 @@ public class Imagem {
     private long id_denuncia;
     private byte[] dados;
 
-    public Imagem(String id, long id_denuncia, byte[] dados) {
-        this.id = id;
+    public Imagem(long id_denuncia, byte[] dados) {
         this.id_denuncia = id_denuncia;
         this.dados = dados;
     }
 
     public Imagem() {
-        this("",0L,null);
+        this(0L,null);
     }
 
     public String getId() {
