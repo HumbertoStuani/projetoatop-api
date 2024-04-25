@@ -28,8 +28,13 @@ public class ImagemService {
         return this.imagemRepository.findById(id).orElse(null);
     }
 
-    public Imagem save(Imagem imagem) {
-        return this.imagemRepository.save(imagem);
+    public boolean save(Imagem imagem) {
+        try {
+            this.imagemRepository.save(imagem);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public Boolean deleteById(String id) {

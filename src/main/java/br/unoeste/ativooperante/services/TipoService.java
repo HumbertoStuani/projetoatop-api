@@ -17,4 +17,8 @@ public class TipoService {
     {
         return tiporepo.findAll();
     }
+
+    public Tipo getById(long idTipo) {
+        return tiporepo.findById(idTipo).orElse(null);
+    }
 }
