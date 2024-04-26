@@ -19,7 +19,7 @@ import java.io.IOException;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "api/cidadao")
+@RequestMapping(value = "/api/cidadao")
 public class CidadaoRestController {
 
     @Autowired
@@ -33,7 +33,7 @@ public class CidadaoRestController {
     @Autowired
     private ImagemService imagemService;
 
-    @GetMapping(value = "teste-conexao")
+    @GetMapping(value = "/teste-conexao")
     public  String testeConexao()
     {
         return "conectado";
@@ -42,12 +42,12 @@ public class CidadaoRestController {
     @GetMapping(value = "/tipos")
     public ResponseEntity<Object> buscarTodosTipos()
     {
-        return new ResponseEntity<>(tipoService.getAll(), HttpStatus.OK);
+        return new ResponseEntity<>(this.tipoService.getAll(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/orgaos")
     public ResponseEntity<Object> buscarTodosOrgaos() {
-        return new ResponseEntity<>(orgaoService.getAll(), HttpStatus.OK);
+        return new ResponseEntity<>(this.orgaoService.getAll(), HttpStatus.OK);
     }
 
     @PostMapping("/denuncia")
