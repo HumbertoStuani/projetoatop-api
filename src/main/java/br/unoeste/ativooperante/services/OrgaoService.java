@@ -38,4 +38,15 @@ public class OrgaoService {
         }
         return true;
     }
+
+    public Orgao alterar (Long id,Orgao orgao)
+    {
+        Orgao aux = orgaoRepository.findById(id).orElse(null);
+        if(aux != null)
+        {
+            aux.setNome(orgao.getNome());
+            return this.orgaoRepository.save(aux);
+        }
+        return null;
+    }
 }

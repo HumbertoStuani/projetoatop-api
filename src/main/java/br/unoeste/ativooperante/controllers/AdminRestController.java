@@ -61,8 +61,14 @@ public class AdminRestController {
         return new ResponseEntity<>(this.orgaoService.getAll(),HttpStatus.OK);
     }
 
-    //@PatchMapping("/orgao")
-    //public ResponseEntity<Object> alteraOrgao(@RequestParam("id") Long id, @RequestBody Orgao orgaoUpdate)
+    @PatchMapping("/orgao")
+    public ResponseEntity<Object> alteraOrgao(@RequestParam("id") Long id, @RequestBody Orgao orgaoUpdate)
+    {
+        Orgao aux = orgaoService.alterar(id, orgaoUpdate);
+        if(aux != null)
+            return new ResponseEntity<>(aux,HttpStatus.OK);
+        return new ResponseEntity<>("",HttpStatus.NOT_FOUND);
+    }
 
     @DeleteMapping("/orgao")
     public ResponseEntity<Object> excluirOrgao(@RequestParam(value = "id") Long id) {
@@ -70,6 +76,7 @@ public class AdminRestController {
             return new ResponseEntity<>("",HttpStatus.OK);
         return new ResponseEntity<>("",HttpStatus.BAD_REQUEST);
     }
+
 
     //CRUD TIPOS
     @PostMapping(value = "/tipo")
