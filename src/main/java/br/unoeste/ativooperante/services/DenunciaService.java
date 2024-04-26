@@ -1,8 +1,10 @@
 package br.unoeste.ativooperante.services;
 
 import br.unoeste.ativooperante.db.entities.Denuncia;
+import br.unoeste.ativooperante.db.entities.Feedback;
 import br.unoeste.ativooperante.db.mongo.Imagem;
 import br.unoeste.ativooperante.db.repository.DenunciaRepository;
+import br.unoeste.ativooperante.db.repository.FeedbackRepository;
 import br.unoeste.ativooperante.db.repository.ImagemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -20,6 +22,8 @@ public class DenunciaService {
     private ImagemService imagemService;
     @Autowired
     private DenunciaRepository denunciaRepository;
+    @Autowired
+    private FeedbackRepository feedbackRepository;
 
     public List<Denuncia> findAll() {
         return this.denunciaRepository.findAll();
@@ -44,4 +48,29 @@ public class DenunciaService {
         }
     }
 
+    public Denuncia update(Long id, Denuncia denunciaUpdate) {
+        Denuncia denuncia =  this.denunciaRepository.findById(id).orElse(null);
+        if (denuncia != null) {
+            denuncia.setOrgao(denunciaUpdate.getOrgao());
+            denuncia.setTipo(denunciaUpdate.getTipo());
+            denuncia.setTexto(denunciaUpdate.getTexto());
+            denuncia.setTitulo(denunciaUpdate.getTitulo());
+            if(denunciaUpdate.getFeedback() != null) {
+                denuncia.setFeedback(denunciaUpdate.getFeedback());
+            }
+            return this.denunciaRepository.save(denuncia);
+        }
+        return null;
+    }
+
+    public Denuncia addFeedback(Long id, Feedback feedback) {
+        Denuncia denuncia = this.denunciaRepository.findById(id).orElse(null);
+        if(denuncia != null) {
+            feedback.setDenuncia(denuncia);
+            Feedback feedbackSalvo = this.feedbackRepository.save(feedback);
+            denuncia.setFeedback(feedbackSalvo);
+            return this.denunciaRepository.save(denuncia);
+        }
+        return null;
+    }
 }

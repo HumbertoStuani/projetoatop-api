@@ -1,11 +1,14 @@
 package br.unoeste.ativooperante.controllers;
 
 
+import br.unoeste.ativooperante.db.entities.Denuncia;
+import br.unoeste.ativooperante.db.entities.Feedback;
 import br.unoeste.ativooperante.db.entities.Orgao;
 import br.unoeste.ativooperante.db.entities.Tipo;
 import br.unoeste.ativooperante.db.mongo.Imagem;
 import br.unoeste.ativooperante.db.repository.DenunciaRepository;
 import br.unoeste.ativooperante.db.repository.OrgaoRepository;
+import br.unoeste.ativooperante.services.DenunciaService;
 import br.unoeste.ativooperante.services.ImagemService;
 import br.unoeste.ativooperante.services.OrgaoService;
 import br.unoeste.ativooperante.services.TipoService;
@@ -14,6 +17,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api/admin")
@@ -25,6 +32,8 @@ public class AdminRestController {
     private TipoService tipoService;
     @Autowired
     private ImagemService imagemService;
+    @Autowired
+    private DenunciaService denunciaService;
 
     @GetMapping(value = "/teste-admin")
     public String testeadm() {
@@ -96,12 +105,47 @@ public class AdminRestController {
     }
 
     //CRUD DENUNCIAS - ADMIN
+    @GetMapping("/denuncia/all")
+    public ResponseEntity<Object> getDenuncias() {
+        return new ResponseEntity<>(this.denunciaService.findAll(),HttpStatus.OK);
+    }
+
+    @GetMapping("/denuncia")
+    public ResponseEntity<Object> getDenuncia(@RequestParam(value = "id") Long id) {
+        return new ResponseEntity<>(this.denunciaService.findById(id),HttpStatus.OK);
+    }
 
     @GetMapping("/denuncia/imagem")
-    public ResponseEntity<byte[]> getImagem(@RequestParam("id") Long id) {
+    public ResponseEntity<Object> getImagem(@RequestParam("id") Long id) {
         Imagem imagem = this.imagemService.findByDenuncia(id);
         if (imagem != null)
             return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imagem.getDados());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Imagem não foi fornecida.");
+    }
+
+    @PatchMapping("/denuncia")
+    public ResponseEntity<Object> alterarDenuncia(@RequestParam("id") Long id, @RequestBody Denuncia denunciaUpdate) {
+        Denuncia denuncia = this.denunciaService.update(id, denunciaUpdate);
+        if (denuncia != null)
+            return ResponseEntity.ok(denuncia);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Denúncia não encontrada.");
+    }
+
+    @PutMapping("/denuncia/imagem")
+    public ResponseEntity<Object> alterarImagem(@RequestParam("id") Long id, @RequestParam MultipartFile imagemUpdate) throws IOException {
+        Denuncia denuncia = this.denunciaService.findById(id);
+        if(denuncia != null) {
+            Imagem imagem = this.imagemService.update(id, imagemUpdate.getBytes());
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imagem.getDados());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Denúncia não encontrada.");
+    }
+
+    @PatchMapping("/denuncia/feedback")
+    public ResponseEntity<Object> adicionarFeedback(@RequestParam("id") Long id, @RequestBody Feedback feedback) {
+        Denuncia denuncia = this.denunciaService.addFeedback(id, feedback);
+        if(denuncia != null)
+            return new ResponseEntity<>(denuncia, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Denúncia não encontrada.");
     }
 }

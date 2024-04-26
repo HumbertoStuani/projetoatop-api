@@ -45,4 +45,13 @@ public class ImagemService {
             return false;
         }
     }
+
+    public Imagem update(Long id, byte[] dados) {
+        Imagem imagem = this.findByDenuncia(id);
+        if (imagem != null)
+            imagem.setDados(dados);
+        else
+            imagem = new Imagem(id, dados);
+        return this.imagemRepository.save(imagem);
+    }
 }
