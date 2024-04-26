@@ -3,8 +3,6 @@ package br.unoeste.ativooperante.services;
 import br.unoeste.ativooperante.db.entities.Tipo;
 import br.unoeste.ativooperante.db.repository.TipoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,28 +11,28 @@ import java.util.List;
 public class TipoService {
 
     @Autowired
-    private TipoRepository tiporepo;
+    private TipoRepository tipoRepository;
 
     public List<Tipo> getAll()
     {
-        return tiporepo.findAll();
+        return this.tipoRepository.findAll();
     }
 
     public Tipo getById(Long idTipo) {
-        return tiporepo.findById(idTipo).orElse(null);
+        return this.tipoRepository.findById(idTipo).orElse(null);
     }
 
     public Tipo saveTipo(Tipo tipo)
     {
-        return tiporepo.save(tipo);
+        return this.tipoRepository.save(tipo);
     }
 
     public Tipo alterar (Long id, Tipo novo)
     {
-        Tipo tipo = tiporepo.findById(id).orElse(null);
+        Tipo tipo = this.tipoRepository.findById(id).orElse(null);
         if(tipo != null) {
             tipo.setNome(novo.getNome());
-            return tiporepo.save(tipo);
+            return this.tipoRepository.save(tipo);
         }
         return null;
     }
@@ -42,7 +40,7 @@ public class TipoService {
     public boolean delete (Long id)
     {
         try {
-            tiporepo.deleteById(id);
+            this.tipoRepository.deleteById(id);
         }catch (Exception e)
         {
             return false;

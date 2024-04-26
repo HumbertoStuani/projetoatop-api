@@ -11,27 +11,27 @@ import java.util.List;
 public class OrgaoService {
 
     @Autowired
-    private OrgaoRepository repo;
+    private OrgaoRepository orgaoRepository;
 
     public Orgao save(Orgao orgao)
     {
-        return repo.save(orgao);
+        return this.orgaoRepository.save(orgao);
     }
 
     public Orgao getById (Long id)
     {
-        return repo.findById(id).get();
+        return this.orgaoRepository.findById(id).get();
     }
 
     public List<Orgao> getAll()
     {
-        return repo.findAll();
+        return this.orgaoRepository.findAll();
     }
 
     public boolean delete (Long id)
     {
         try {
-            repo.deleteById(id);
+            this.orgaoRepository.deleteById(id);
         }catch (Exception e)
         {
             return false;
