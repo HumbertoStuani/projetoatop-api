@@ -29,9 +29,14 @@ public class TipoService {
         return tiporepo.save(tipo);
     }
 
-    public Tipo alterar (Long id,Tipo tipo)
+    public Tipo alterar (Long id, Tipo novo)
     {
-        return  tiporepo.alterar(tipo.getNome(),id).orElse(null);
+        Tipo tipo = tiporepo.findById(id).orElse(null);
+        if(tipo != null) {
+            tipo.setNome(novo.getNome());
+            return tiporepo.save(tipo);
+        }
+        return null;
     }
 
     public boolean delete (Long id)
