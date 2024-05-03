@@ -1,7 +1,8 @@
-package br.unoeste.ativooperante.secutiry;
+package br.unoeste.ativooperante.security;
 
 import java.io.IOException;
 
+import br.unoeste.ativooperante.utils.JWTTokenProvider;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,7 +17,7 @@ public class AccessFilter implements Filter {
             throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         String token = req.getHeader("Authorization"); 
-        if(token!=null && JWTTokenProvider.verifyToken(token))
+        if(token != null && JWTTokenProvider.verifyToken(token))
             chain.doFilter(request, response);    
         else
             ((HttpServletResponse)response).setStatus(500);

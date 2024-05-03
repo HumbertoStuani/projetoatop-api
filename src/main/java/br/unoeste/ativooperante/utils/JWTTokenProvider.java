@@ -1,4 +1,4 @@
-package br.unoeste.ativooperante.secutiry;
+package br.unoeste.ativooperante.utils;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -10,22 +10,25 @@ import javax.crypto.SecretKey;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 
 public class JWTTokenProvider {
-    private static final SecretKey CHAVE = Keys.hmacShaKeyFor(
-            "MINHACHAVESECRETA_MINHACHAVESECRETA".getBytes(StandardCharsets.UTF_8));
+    @Value("${jwt.secret}")
+    private static String secret;
+    private static final SecretKey CHAVE = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 
     static public String getToken(String usuario,String nivel) 
     {       
         String jwtToken = Jwts.builder()
-            .setSubject("usuario")
-            .setIssuer("localhost:8080")
-            .claim("nivel", nivel)
-            .setIssuedAt(new Date())
-            .setExpiration(Date.from(LocalDateTime.now().plusMinutes(15L)
+                .setSubject("usuario")
+                .setIssuer("localhost:8080")
+                .claim("nivel", nivel)
+                .claim("usuario", usuario)
+                .setIssuedAt(new Date())
+                .setExpiration(Date.from(LocalDateTime.now().plusMinutes(15L)
                 .atZone(ZoneId.systemDefault()).toInstant()))
-            .signWith(CHAVE)
-            .compact();
+                .signWith(CHAVE)
+                .compact();
         return jwtToken;        
     }
 
