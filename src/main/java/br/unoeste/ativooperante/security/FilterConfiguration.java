@@ -1,4 +1,4 @@
-package br.unoeste.ativooperante.secutiry;
+package br.unoeste.ativooperante.security;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

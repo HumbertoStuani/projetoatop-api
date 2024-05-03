@@ -3,7 +3,8 @@ package br.unoeste.ativooperante.db.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "usuario")
+@Table(name = "usuario", uniqueConstraints = @UniqueConstraint(columnNames = {"usu_id", "usu_email"}))
+
 public class Usuario {
 
     @Id

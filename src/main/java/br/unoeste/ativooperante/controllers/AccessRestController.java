@@ -1,7 +1,11 @@
 package br.unoeste.ativooperante.controllers;
 
 import br.unoeste.ativooperante.db.entities.Usuario;
-import br.unoeste.ativooperante.secutiry.JWTTokenProvider;
+import br.unoeste.ativooperante.services.UsuarioService;
+import br.unoeste.ativooperante.utils.JWTTokenProvider;
+import br.unoeste.ativooperante.utils.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,22 +13,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/security/")
+@RequestMapping("/api/security")
 public class AccessRestController
 {
-    @PostMapping(value = "/logar")
-    public ResponseEntity<Object> logar(@RequestBody Usuario usuario)
-    {
-        String token = "não autenticado";
-        // acesso ao BD para verificar a existencia do usuario
-        //comparar a senha
+    @Autowired
+    private UsuarioService usuarioService;
 
-        if(usuario.getSenha().equals("123"))
-        {
-            token = JWTTokenProvider.getToken(usuario.getEmail(), ""+usuario.getNivel());
-            return ResponseEntity.ok(token);
+    @PostMapping(value = "/login")
+    public ResponseEntity<Object> logar(@RequestBody Usuario usuarioLogin)
+    {
+        Usuario usuario = this.usuarioService.findByEmail(usuarioLogin.getEmail());
+        if(usuario == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+        else {
+            if (PasswordEncoder.compare(usuarioLogin.getSenha(), usuario.getSenha())) {
+                String token = JWTTokenProvider.getToken(""+usuario.getId(), "" + usuario.getNivel());
+                return ResponseEntity.ok(token);
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Senha inválida.");
         }
-        return ResponseEntity.badRequest().body(token);
     }
 
 }
