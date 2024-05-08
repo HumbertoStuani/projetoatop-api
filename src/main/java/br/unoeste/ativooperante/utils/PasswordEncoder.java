@@ -7,7 +7,7 @@ public class PasswordEncoder {
     public static String hashPassword(String password) {
         return encoder.encode(password);
     }
-    public static boolean compare(String rawPassword, String hashedPassword) {
+    public static boolean compare(CharSequence rawPassword, String hashedPassword) {
         return encoder.matches(rawPassword, hashedPassword);
     }
 }

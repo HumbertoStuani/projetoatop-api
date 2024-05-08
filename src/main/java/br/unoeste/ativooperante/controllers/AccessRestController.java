@@ -7,13 +7,11 @@ import br.unoeste.ativooperante.utils.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/api/security")
+@RequestMapping("/access")
 public class AccessRestController
 {
     @Autowired
@@ -32,6 +30,14 @@ public class AccessRestController
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Senha inválida.");
         }
+    }
+
+    @PostMapping(value = "/register")
+    public ResponseEntity<Object> registrar(@RequestBody Usuario usuario) {
+        usuario.setNivel(2);
+        usuario.setSenha(PasswordEncoder.hashPassword(usuario.getSenha()));
+        Usuario usuarioCriado = this.usuarioService.save(usuario);
+        return logar(usuarioCriado);
     }
 
 }
