@@ -33,23 +33,27 @@ public class CidadaoRestController {
     @Autowired
     private ImagemService imagemService;
 
+    @CrossOrigin
     @GetMapping(value = "/home")
     public  String testeConexao()
     {
         return "conectado";
     }
 
+    @CrossOrigin
     @GetMapping(value = "/tipos")
     public ResponseEntity<Object> buscarTodosTipos()
     {
         return new ResponseEntity<>(this.tipoService.getAll(), HttpStatus.OK);
     }
 
+    @CrossOrigin
     @GetMapping(value = "/orgaos")
     public ResponseEntity<Object> buscarTodosOrgaos() {
         return new ResponseEntity<>(this.orgaoService.getAll(), HttpStatus.OK);
     }
 
+    @CrossOrigin
     @PostMapping("/denuncia")
     public ResponseEntity<Object> enviarDenuncia(@RequestParam String titulo, @RequestParam String texto, @RequestParam int urgencia, @RequestParam long idTipo,
                                                  @RequestParam long idUsuario, @RequestParam long idOrgao, @RequestParam(required = false) MultipartFile imagem) {
