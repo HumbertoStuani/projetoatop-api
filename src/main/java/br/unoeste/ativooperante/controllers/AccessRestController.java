@@ -41,9 +41,10 @@ public class AccessRestController
     @PostMapping(value = "/register")
     public ResponseEntity<Object> registrar(@RequestBody Usuario usuario) {
         usuario.setNivel(2);
+        Usuario usuarioLogin = new Usuario(0L, "", usuario.getEmail(), usuario.getSenha(), 0);
         usuario.setSenha(PasswordEncoder.hashPassword(usuario.getSenha()));
-        Usuario usuarioCriado = this.usuarioService.save(usuario);
-        return logar(usuarioCriado);
+        this.usuarioService.save(usuario);
+        return logar(usuarioLogin);
     }
 
 }
