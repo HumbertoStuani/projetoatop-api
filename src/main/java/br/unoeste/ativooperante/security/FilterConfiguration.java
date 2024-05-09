@@ -9,10 +9,10 @@ public class FilterConfiguration {
 
     @Bean
     public FilterRegistrationBean<AccessFilter> registrationBean(){
-        // registrando o filtro
+//         registrando o filtro
         FilterRegistrationBean<AccessFilter> register = new FilterRegistrationBean<>();
         register.setFilter(new AccessFilter());
-        // definindo as URLs para aplicar o filtro
+//         definindo as URLs para aplicar o filtro
         register.addUrlPatterns("/api/admin/*");
         register.addUrlPatterns("/api/cidadao/*");
         return register;

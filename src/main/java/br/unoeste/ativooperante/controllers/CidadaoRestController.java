@@ -33,7 +33,7 @@ public class CidadaoRestController {
     @Autowired
     private ImagemService imagemService;
 
-    @GetMapping(value = "/teste-conexao")
+    @GetMapping(value = "/home")
     public  String testeConexao()
     {
         return "conectado";

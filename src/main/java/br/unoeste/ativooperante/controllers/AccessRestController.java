@@ -4,6 +4,7 @@ import br.unoeste.ativooperante.db.entities.Usuario;
 import br.unoeste.ativooperante.services.UsuarioService;
 import br.unoeste.ativooperante.utils.JWTTokenProvider;
 import br.unoeste.ativooperante.utils.PasswordEncoder;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +26,18 @@ public class AccessRestController
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
         else {
             if (PasswordEncoder.compare(usuarioLogin.getSenha(), usuario.getSenha())) {
-                String token = JWTTokenProvider.getToken(""+usuario.getId(), "" + usuario.getNivel());
+                String token = JWTTokenProvider.getToken(usuario.getId(), usuario.getNivel());
                 return ResponseEntity.ok(token);
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Senha inválida.");
         }
     }
 
+    @GetMapping()
+    public ResponseEntity<Object> caminho(@RequestParam("token")String token) {
+        Claims claims = JWTTokenProvider.getAllClaimsFromToken(token);
+        return ResponseEntity.accepted().body(claims.get("nivel", Integer.class));
+    }
     @PostMapping(value = "/register")
     public ResponseEntity<Object> registrar(@RequestBody Usuario usuario) {
         usuario.setNivel(2);
