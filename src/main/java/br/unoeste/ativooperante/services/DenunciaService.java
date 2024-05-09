@@ -2,6 +2,7 @@ package br.unoeste.ativooperante.services;
 
 import br.unoeste.ativooperante.db.entities.Denuncia;
 import br.unoeste.ativooperante.db.entities.Feedback;
+import br.unoeste.ativooperante.db.entities.Usuario;
 import br.unoeste.ativooperante.db.mongo.Imagem;
 import br.unoeste.ativooperante.db.repository.DenunciaRepository;
 import br.unoeste.ativooperante.db.repository.FeedbackRepository;
@@ -24,6 +25,8 @@ public class DenunciaService {
     private DenunciaRepository denunciaRepository;
     @Autowired
     private FeedbackRepository feedbackRepository;
+    @Autowired
+    private UsuarioService usuarioService;
 
     public List<Denuncia> findAll() {
         return this.denunciaRepository.findAll();
@@ -71,6 +74,13 @@ public class DenunciaService {
             denuncia.setFeedback(feedbackSalvo);
             return this.denunciaRepository.save(denuncia);
         }
+        return null;
+    }
+
+    public List<Denuncia> findByUsuario(long id) {
+        Usuario usuario = this.usuarioService.findById(id);
+        if(usuario != null)
+            return this.denunciaRepository.findAllByUsuario(usuario);
         return null;
     }
 }

@@ -6,6 +6,7 @@ import br.unoeste.ativooperante.db.entities.Tipo;
 import br.unoeste.ativooperante.db.entities.Usuario;
 import br.unoeste.ativooperante.db.mongo.Imagem;
 import br.unoeste.ativooperante.services.*;
+import br.unoeste.ativooperante.utils.JWTTokenProvider;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,34 +34,36 @@ public class CidadaoRestController {
     @Autowired
     private ImagemService imagemService;
 
-    @CrossOrigin
     @GetMapping(value = "/home")
     public  String testeConexao()
     {
         return "conectado";
     }
 
-    @CrossOrigin
     @GetMapping(value = "/tipos")
     public ResponseEntity<Object> buscarTodosTipos()
     {
         return new ResponseEntity<>(this.tipoService.getAll(), HttpStatus.OK);
     }
 
-    @CrossOrigin
     @GetMapping(value = "/orgaos")
     public ResponseEntity<Object> buscarTodosOrgaos() {
         return new ResponseEntity<>(this.orgaoService.getAll(), HttpStatus.OK);
     }
 
-    @CrossOrigin
+    @GetMapping(value = "/denuncia")
+    public ResponseEntity<Object> buscarDenunciasUsuario(@RequestHeader("Authorization") String token) {
+        long id = JWTTokenProvider.getAllClaimsFromToken(token).get("id", Long.class);
+        return new ResponseEntity<>(this.denunciaService.findByUsuario(id), HttpStatus.OK);
+    }
+
     @PostMapping("/denuncia")
-    public ResponseEntity<Object> enviarDenuncia(@RequestParam String titulo, @RequestParam String texto, @RequestParam int urgencia, @RequestParam long idTipo,
-                                                 @RequestParam long idUsuario, @RequestParam long idOrgao, @RequestParam(required = false) MultipartFile imagem) {
+    public ResponseEntity<Object> enviarDenuncia(@RequestHeader("Authorization")String token, @RequestParam String titulo, @RequestParam String texto, @RequestParam int urgencia,
+                                                 @RequestParam long idTipo, @RequestParam long idOrgao, @RequestParam(required = false) MultipartFile imagem) {
         Denuncia denuncia = new Denuncia();
         Orgao orgao = this.orgaoService.getById(idOrgao);
         Tipo tipo = this.tipoService.getById(idTipo);
-        Usuario usuario = this.usuarioService.findById(idUsuario);
+        Usuario usuario = this.usuarioService.findById(JWTTokenProvider.getAllClaimsFromToken(token).get("id", Long.class));
         denuncia.setTitulo(titulo);
         denuncia.setTexto(texto);
         denuncia.setUrgencia(urgencia);
