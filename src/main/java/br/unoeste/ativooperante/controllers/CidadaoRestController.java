@@ -10,13 +10,12 @@ import br.unoeste.ativooperante.utils.JWTTokenProvider;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 @CrossOrigin
 @RestController
@@ -34,12 +33,6 @@ public class CidadaoRestController {
     @Autowired
     private ImagemService imagemService;
 
-    @GetMapping(value = "/home")
-    public  String testeConexao()
-    {
-        return "conectado";
-    }
-
     @GetMapping(value = "/tipos")
     public ResponseEntity<Object> buscarTodosTipos()
     {
@@ -52,33 +45,33 @@ public class CidadaoRestController {
     }
 
     @GetMapping(value = "/denuncia")
-    public ResponseEntity<Object> buscarDenunciasUsuario(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<Object> buscarDenunciasUsuario(@RequestHeader(value = "Authorization", required = true) String token) {
         long id = JWTTokenProvider.getAllClaimsFromToken(token).get("id", Long.class);
         return new ResponseEntity<>(this.denunciaService.findByUsuario(id), HttpStatus.OK);
     }
 
     @PostMapping("/denuncia")
-    public ResponseEntity<Object> enviarDenuncia(@RequestHeader("Authorization")String token, @RequestParam String titulo, @RequestParam String texto, @RequestParam int urgencia,
-                                                 @RequestParam long idTipo, @RequestParam long idOrgao, @RequestParam(required = false) MultipartFile imagem) {
-        Denuncia denuncia = new Denuncia();
-        Orgao orgao = this.orgaoService.getById(idOrgao);
-        Tipo tipo = this.tipoService.getById(idTipo);
+    public ResponseEntity<Object> enviarDenuncia(@RequestHeader(value = "Authorization", required = true) String token, @RequestParam String titulo, @RequestParam String texto,
+                                                 @RequestParam int urgencia, @RequestParam int idOrgao, @RequestParam int idTipo, @RequestParam(required = false) MultipartFile imagem) {
+        Denuncia denuncia = new Denuncia(0L, titulo, texto, urgencia, LocalDate.now(),null,null, null);
+        Orgao orgao = this.orgaoService.getById((long)idOrgao);
+        Tipo tipo = this.tipoService.getById((long)idTipo);
         Usuario usuario = this.usuarioService.findById(JWTTokenProvider.getAllClaimsFromToken(token).get("id", Long.class));
-        denuncia.setTitulo(titulo);
-        denuncia.setTexto(texto);
-        denuncia.setUrgencia(urgencia);
         denuncia.setTipo(tipo);
         denuncia.setOrgao(orgao);
         denuncia.setUsuario(usuario);
         try {
-            ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.CREATED).body(this.denunciaService.save(denuncia));
-            if(imagem != null) {
-                long id_denuncia = ((Denuncia) response.getBody()).getId();
-                Imagem img = new Imagem(id_denuncia, imagem.getBytes());
-                if(!this.imagemService.save(img))
-                    throw new BadRequestException("Erro ao salvar imagem.");
+            if(JWTTokenProvider.verifyToken(token)) {
+                ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.CREATED).body(this.denunciaService.save(denuncia));
+                if (imagem != null) {
+                    long id_denuncia = ((Denuncia) response.getBody()).getId();
+                    Imagem img = new Imagem(id_denuncia, imagem.getBytes());
+                    if (!this.imagemService.save(img))
+                        throw new BadRequestException("Erro ao salvar imagem.");
+                }
+                return response;
             }
-            return response;
+            return new ResponseEntity<>("Sessão expirada.", HttpStatus.UNAUTHORIZED);
         } catch (IOException e) {
             return ResponseEntity.badRequest().body("Erro ao registrar denúncia, " + e);
         }
