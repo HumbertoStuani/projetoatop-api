@@ -21,7 +21,7 @@ public class ImagemService {
         Imagem imagem = mongoTemplate.findOne(query, Imagem.class);
         if (imagem != null && imagem.getDados() != null)
             return imagem;
-        return null;
+        return new Imagem("");
     }
 
     public Imagem findById(String id) {

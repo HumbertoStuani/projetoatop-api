@@ -20,6 +20,11 @@ public class Imagem {
         this(0L,null);
     }
 
+    public Imagem(String id) {
+        this();
+        this.id = id;
+    }
+
     public String getId() {
         return id;
     }

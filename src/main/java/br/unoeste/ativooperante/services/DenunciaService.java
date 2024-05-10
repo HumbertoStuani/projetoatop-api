@@ -3,18 +3,12 @@ package br.unoeste.ativooperante.services;
 import br.unoeste.ativooperante.db.entities.Denuncia;
 import br.unoeste.ativooperante.db.entities.Feedback;
 import br.unoeste.ativooperante.db.entities.Usuario;
-import br.unoeste.ativooperante.db.mongo.Imagem;
 import br.unoeste.ativooperante.db.repository.DenunciaRepository;
 import br.unoeste.ativooperante.db.repository.FeedbackRepository;
-import br.unoeste.ativooperante.db.repository.ImagemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class DenunciaService {
@@ -44,7 +38,8 @@ public class DenunciaService {
         try {
             this.denunciaRepository.delete(denuncia);
             String imagem_id = this.imagemService.findByDenuncia(denuncia.getId()).getId();
-            this.imagemService.deleteById(imagem_id);
+            if(!Objects.equals(imagem_id, ""))
+                this.imagemService.deleteById(imagem_id);
             return true;
         } catch (Exception e) {
             return false;
