@@ -14,7 +14,7 @@ public class FilterConfiguration {
     public FilterRegistrationBean<CorsFilter> corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration().applyPermitDefaultValues();
-        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("PATCH");
         config.addAllowedMethod("DELETE");
         config.addAllowedMethod("POST");
         config.addAllowedMethod("GET");
