@@ -85,13 +85,14 @@ public class AdminRestController {
         return new ResponseEntity<>(this.tipoService.saveTipo(tipo),HttpStatus.OK);
     }
 
-    //@GetMapping("/tipo")
-    //public ResponseEntity<Object> getTipo(@RequestParam("id") Long id)
+//    @GetMapping("/tipo")
+//    public ResponseEntity<Object> getTipo(@RequestParam("id") Long id) {
+//        return new ResponseEntity<>(this.tipoService.getById(id),HttpStatus.OK);
+//    }
 
     @GetMapping(value = "/tipo/all")
     public ResponseEntity<Object> listaTipos ()
-    {
-        return new ResponseEntity<>(this.tipoService.getAll(),HttpStatus.OK);
+    {return new ResponseEntity<>(this.tipoService.getAll(),HttpStatus.OK);
     }
 
     @PatchMapping(value = "/tipo")
@@ -138,15 +139,15 @@ public class AdminRestController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Denúncia não encontrada.");
     }
 
-    @PutMapping("/denuncia/imagem")
-    public ResponseEntity<Object> alterarImagem(@RequestParam("id") Long id, @RequestParam MultipartFile imagemUpdate) throws IOException {
-        Denuncia denuncia = this.denunciaService.findById(id);
-        if(denuncia != null) {
-            Imagem imagem = this.imagemService.update(id, imagemUpdate.getBytes());
-            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imagem.getDados());
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Denúncia não encontrada.");
-    }
+//    @PutMapping("/denuncia/imagem")
+//    public ResponseEntity<Object> alterarImagem(@RequestParam("id") Long id, @RequestParam MultipartFile imagemUpdate) throws IOException {
+//        Denuncia denuncia = this.denunciaService.findById(id);
+//        if(denuncia != null) {
+//            Imagem imagem = this.imagemService.update(id, imagemUpdate.getBytes());
+//            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imagem.getDados());
+//        }
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Denúncia não encontrada.");
+//    }
 
     @PatchMapping("/denuncia/feedback")
     public ResponseEntity<Object> adicionarFeedback(@RequestParam("id") Long id, @RequestBody Feedback feedback) {
