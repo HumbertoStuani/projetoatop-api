@@ -156,4 +156,9 @@ public class AdminRestController {
             return new ResponseEntity<>(denuncia, HttpStatus.OK);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Denúncia não encontrada.");
     }
+
+    @GetMapping("/denuncia/feedbacks")
+    public ResponseEntity<Object> getFeedback() {
+        return new ResponseEntity<>(this.denunciaService.getFeedbacks(),HttpStatus.OK);
+    }
 }

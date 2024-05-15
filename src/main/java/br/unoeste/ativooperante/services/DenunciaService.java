@@ -61,12 +61,19 @@ public class DenunciaService {
         return null;
     }
 
-    public Denuncia addFeedback(Long id, Feedback feedback) {
+    public Denuncia addFeedback(Long id, Feedback feedbackupdate) {
         Denuncia denuncia = this.denunciaRepository.findById(id).orElse(null);
         if(denuncia != null) {
-            feedback.setDenuncia(denuncia);
-            Feedback feedbackSalvo = this.feedbackRepository.save(feedback);
-            denuncia.setFeedback(feedbackSalvo);
+            if(denuncia.getFeedback() != null) {
+                Feedback feedback = this.feedbackRepository.findById(denuncia.getFeedback().getId()).orElse(null);
+                feedback.setTexto(feedbackupdate.getTexto());
+                this.feedbackRepository.save(feedback);
+            }
+            else {
+                feedbackupdate.setDenuncia(denuncia);
+                Feedback novoFeedback = this.feedbackRepository.save(feedbackupdate);
+                denuncia.setFeedback(novoFeedback);
+            }
             return this.denunciaRepository.save(denuncia);
         }
         return null;
@@ -77,5 +84,9 @@ public class DenunciaService {
         if(usuario != null)
             return this.denunciaRepository.findAllByUsuario(usuario);
         return null;
+    }
+
+    public List<Feedback> getFeedbacks() {
+        return this.feedbackRepository.findAll();
     }
 }
