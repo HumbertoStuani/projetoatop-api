@@ -16,7 +16,6 @@ public class Usuario {
     private String cpf;
     @Column(name = "usu_email")
     private String email;
-    @JsonIgnore
     @Column(name = "usu_senha")
     private String senha;
     @Column(name = "usu_nivel")
