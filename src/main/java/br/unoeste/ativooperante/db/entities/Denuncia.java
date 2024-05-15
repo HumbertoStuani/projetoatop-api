@@ -1,5 +1,7 @@
 package br.unoeste.ativooperante.db.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -24,6 +26,7 @@ public class Denuncia {
     @ManyToOne
     @JoinColumn(name = "tip_id", nullable = false)
     private Tipo tipo;
+    @JsonIgnoreProperties("senha")
     @ManyToOne
     @JoinColumn(name = "usu_id", nullable = false)
     private Usuario usuario;
@@ -31,6 +34,7 @@ public class Denuncia {
     @JoinColumn(name = "org_id", nullable = false)
     private Orgao orgao;
 
+    @JsonIgnoreProperties("denuncia")
     @OneToOne(mappedBy = "denuncia")
     private Feedback feedback;
 

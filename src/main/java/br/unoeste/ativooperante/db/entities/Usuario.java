@@ -1,5 +1,6 @@
 package br.unoeste.ativooperante.db.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -15,6 +16,7 @@ public class Usuario {
     private String cpf;
     @Column(name = "usu_email")
     private String email;
+    @JsonIgnore
     @Column(name = "usu_senha")
     private String senha;
     @Column(name = "usu_nivel")

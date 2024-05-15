@@ -1,5 +1,6 @@
 package br.unoeste.ativooperante.db.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,9 +13,11 @@ public class Feedback {
     private Long id;
     @Column(name = "fee_texto")
     private String texto;
-    @OneToOne(fetch = FetchType.LAZY)
+
+    @OneToOne
     @JoinColumn(name = "den_id")
     private Denuncia denuncia;
+
     public Feedback(Long id, String texto) {
         this.id = id;
         this.texto = texto;
