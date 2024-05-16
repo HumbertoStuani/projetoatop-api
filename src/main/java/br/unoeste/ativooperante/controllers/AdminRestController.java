@@ -1,17 +1,12 @@
 package br.unoeste.ativooperante.controllers;
 
 
-import br.unoeste.ativooperante.db.entities.Denuncia;
-import br.unoeste.ativooperante.db.entities.Feedback;
-import br.unoeste.ativooperante.db.entities.Orgao;
-import br.unoeste.ativooperante.db.entities.Tipo;
+import br.unoeste.ativooperante.db.entities.*;
 import br.unoeste.ativooperante.db.mongo.Imagem;
 import br.unoeste.ativooperante.db.repository.DenunciaRepository;
 import br.unoeste.ativooperante.db.repository.OrgaoRepository;
-import br.unoeste.ativooperante.services.DenunciaService;
-import br.unoeste.ativooperante.services.ImagemService;
-import br.unoeste.ativooperante.services.OrgaoService;
-import br.unoeste.ativooperante.services.TipoService;
+import br.unoeste.ativooperante.services.*;
+import br.unoeste.ativooperante.utils.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,10 +29,18 @@ public class AdminRestController {
     private ImagemService imagemService;
     @Autowired
     private DenunciaService denunciaService;
+    @Autowired
+    private UsuarioService usuarioService;
 
-    @GetMapping(value = "/teste-admin")
-    public String testeadm() {
-        return "conectado";
+    @PostMapping("/register")
+    public ResponseEntity<Object> registrarAdmin(@RequestBody Usuario usuario) {
+        Usuario usuarioExistente = usuarioService.findByEmail(usuario.getEmail());
+        if(usuarioExistente != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email já cadastrado");
+        }
+        usuario.setSenha(PasswordEncoder.hashPassword(usuario.getSenha()));
+        this.usuarioService.save(usuario);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Usuario registrado com sucesso");
     }
 
     //CRUD ORGAOS

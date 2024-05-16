@@ -48,6 +48,10 @@ public class AccessRestController
 
     @PostMapping(value = "/register")
     public ResponseEntity<Object> registrar(@RequestBody Usuario usuario) {
+        Usuario usuarioExistente = usuarioService.findByEmail(usuario.getEmail());
+        if(usuarioExistente != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email já cadastrado");
+        }
         usuario.setNivel(2);
         Usuario usuarioLogin = new Usuario(0L, "", usuario.getEmail(), usuario.getSenha(), 0);
         usuario.setSenha(PasswordEncoder.hashPassword(usuario.getSenha()));
