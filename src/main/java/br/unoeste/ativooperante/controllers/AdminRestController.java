@@ -38,6 +38,7 @@ public class AdminRestController {
         if(usuarioExistente != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email já cadastrado");
         }
+        usuario.setNivel(1);
         usuario.setSenha(PasswordEncoder.hashPassword(usuario.getSenha()));
         this.usuarioService.save(usuario);
         return ResponseEntity.status(HttpStatus.CREATED).body("Usuario registrado com sucesso");
