@@ -4,6 +4,7 @@ package br.unoeste.ativooperante.controllers;
 import br.unoeste.ativooperante.db.Conexao;
 import br.unoeste.ativooperante.db.entities.*;
 import br.unoeste.ativooperante.db.mongo.Imagem;
+import br.unoeste.ativooperante.utils.ReportGenerator;
 import org.springframework.http.*;
 import br.unoeste.ativooperante.services.*;
 import br.unoeste.ativooperante.utils.PasswordEncoder;
@@ -169,29 +170,12 @@ public class AdminRestController {
 
     @GetMapping("/report")
     public ResponseEntity<byte[]> geraRelatorio () throws IOException, IOException {
-        // path referencia o caminho relativo (realpath) para a pasta que se encontra os .jasper
-        String path = resourceLoader.getResource("classpath:reports/AtivoOperante.jasper").getURI().getPath();
-        byte[] contents = gerarRelatorioPDF("select * from denuncia, orgaos, tipo where denuncia.org_id = orgaos.org_id and denuncia.tip_id = tipo.tip_id order by den_data", path);
-
+        byte[] contents = ReportGenerator.gerarRelatorioPDF();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        //headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
         ResponseEntity<byte[]> response = new ResponseEntity<>(contents, headers, HttpStatus.OK);
         return response;
     }
 
-    private byte[] gerarRelatorioPDF(String sql, String relat)
-    {   byte[] pdf;
-        try { //sql para obter os dados para o relatorio
-            JasperPrint jasperprint=null;
-            ResultSet rs = new Conexao().consultar(sql);
-            JRResultSetDataSource jrRS = new JRResultSetDataSource(rs);
-            jasperprint = JasperFillManager.fillReport(relat, null, jrRS);
-            pdf= JasperExportManager.exportReportToPdf(jasperprint);
 
-        } catch (JRException erro) {
-            pdf=null;
-        }
-        return pdf;
-    }
 }
