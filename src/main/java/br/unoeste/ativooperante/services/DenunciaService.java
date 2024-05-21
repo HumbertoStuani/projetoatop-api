@@ -3,10 +3,13 @@ package br.unoeste.ativooperante.services;
 import br.unoeste.ativooperante.db.entities.Denuncia;
 import br.unoeste.ativooperante.db.entities.Feedback;
 import br.unoeste.ativooperante.db.entities.Usuario;
+import br.unoeste.ativooperante.db.mongo.Imagem;
 import br.unoeste.ativooperante.db.repository.DenunciaRepository;
 import br.unoeste.ativooperante.db.repository.FeedbackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -37,9 +40,9 @@ public class DenunciaService {
     public boolean delete(Denuncia denuncia) {
         try {
             this.denunciaRepository.delete(denuncia);
-            String imagem_id = this.imagemService.findByDenuncia(denuncia.getId()).getId();
-            if(!Objects.equals(imagem_id, ""))
-                this.imagemService.deleteById(imagem_id);
+            Imagem imagem = this.imagemService.findByDenuncia(denuncia.getId());
+            if(imagem != null)
+                this.imagemService.deleteById(imagem.getId());
             return true;
         } catch (Exception e) {
             return false;

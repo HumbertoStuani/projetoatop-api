@@ -20,7 +20,6 @@ public class Denuncia {
     private String texto;
     @Column(name = "den_urgencia")
     private int urgencia;
-
     @Column(name = "den_data")
     private LocalDate data;
     @ManyToOne

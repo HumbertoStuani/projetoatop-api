@@ -8,7 +8,6 @@ import br.unoeste.ativooperante.utils.ReportGenerator;
 import org.springframework.http.*;
 import br.unoeste.ativooperante.services.*;
 import br.unoeste.ativooperante.utils.PasswordEncoder;
-import net.sf.jasperreports.engine.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.bind.annotation.*;
