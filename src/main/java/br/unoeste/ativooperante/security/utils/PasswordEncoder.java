@@ -1,4 +1,4 @@
-package br.unoeste.ativooperante.utils;
+package br.unoeste.ativooperante.security.utils;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

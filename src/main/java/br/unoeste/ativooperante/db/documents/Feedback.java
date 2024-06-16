@@ -1,38 +1,36 @@
-package br.unoeste.ativooperante.db.entities;
+package br.unoeste.ativooperante.db.documents;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
 
-@Entity
-@Table(name = "feedback")
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+@Document(collection = "feedback")
 public class Feedback {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "fee_id")
-    private Long id;
-    @Column(name = "fee_texto")
+    private String id;
+    @Field("texto")
     private String texto;
 
-    @OneToOne
-    @JoinColumn(name = "den_id")
+    @DBRef(lazy = true)
     private Denuncia denuncia;
 
-    public Feedback(Long id, String texto) {
-        this.id = id;
+    public Feedback(String texto) {
         this.texto = texto;
     }
 
     public Feedback()
     {
-        this(0L,"");
+        this("");
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -1,8 +1,9 @@
 package br.unoeste.ativooperante.services;
 
-import br.unoeste.ativooperante.db.entities.Orgao;
+import br.unoeste.ativooperante.db.documents.Orgao;
 import br.unoeste.ativooperante.db.repository.OrgaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,13 +13,15 @@ public class OrgaoService {
 
     @Autowired
     private OrgaoRepository orgaoRepository;
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     public Orgao save(Orgao orgao)
     {
         return this.orgaoRepository.save(orgao);
     }
 
-    public Orgao getById (Long id)
+    public Orgao getById (String id)
     {
         return this.orgaoRepository.findById(id).get();
     }
@@ -28,7 +31,7 @@ public class OrgaoService {
         return this.orgaoRepository.findAll();
     }
 
-    public boolean delete (Long id)
+    public boolean delete (String id)
     {
         try {
             this.orgaoRepository.deleteById(id);
@@ -39,7 +42,7 @@ public class OrgaoService {
         return true;
     }
 
-    public Orgao alterar (Long id,Orgao orgao)
+    public Orgao alterar (String id,Orgao orgao)
     {
         Orgao aux = orgaoRepository.findById(id).orElse(null);
         if(aux != null)

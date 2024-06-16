@@ -1,29 +1,30 @@
-package br.unoeste.ativooperante.db.entities;
+package br.unoeste.ativooperante.db.documents;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 
-@Entity
-@Table(name = "usuario", uniqueConstraints = @UniqueConstraint(columnNames = {"usu_id", "usu_email"}))
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+@Document(collection = "usuario")
 
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "usu_id")
-    private Long id;
-    @Column(name = "usu_cpf")
+    private String id;
+    @Indexed(unique = true)
+    @Field("cpf")
     private String cpf;
-    @Column(name = "usu_email")
+    @Indexed(unique = true)
+    @Field("email")
     private String email;
-    @Column(name = "usu_senha")
+    @Field("senha")
     private String senha;
-    @Column(name = "usu_nivel")
+    @Field("nivel")
     private int nivel;
 
 
-    public Usuario(Long id, String cpf, String email, String senha, int nivel) {
-        this.id = id;
+    public Usuario(String cpf, String email, String senha, int nivel) {
         this.cpf = cpf;
         this.email = email;
         this.senha = senha;
@@ -32,14 +33,14 @@ public class Usuario {
 
     public Usuario()
     {
-        this(0L,"","","",0);
+        this("","","",0);
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

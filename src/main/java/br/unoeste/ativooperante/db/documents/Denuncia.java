@@ -1,45 +1,41 @@
-package br.unoeste.ativooperante.db.entities;
+package br.unoeste.ativooperante.db.documents;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
-@Entity
-@Table(name = "denuncia")
+@Document(collection = "denuncia")
 public class Denuncia {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "den_id")
-    private Long id;
-    @Column(name = "den_titulo")
+    private String id;
+    @Field("titulo")
     private String titulo;
-    @Column(name = "den_texto")
+    @Field("texto")
     private String texto;
-    @Column(name = "den_urgencia")
+    @Field("urgencia")
     private int urgencia;
-
-    @Column(name = "den_data")
+    @Field("data")
     private LocalDate data;
-    @ManyToOne
-    @JoinColumn(name = "tip_id", nullable = false)
+    @Field("imagem")
+    private byte[] imagem;
+    @DBRef
     private Tipo tipo;
+    @DBRef
     @JsonIgnoreProperties("senha")
-    @ManyToOne
-    @JoinColumn(name = "usu_id", nullable = false)
     private Usuario usuario;
-    @ManyToOne
-    @JoinColumn(name = "org_id", nullable = false)
+    @DBRef
     private Orgao orgao;
-
-    @JsonIgnoreProperties("denuncia")
-    @OneToOne(mappedBy = "denuncia")
+    @DBRef
     private Feedback feedback;
 
-    public Denuncia(Long id, String titulo, String texto, int urgencia, LocalDate data, Tipo tipo, Usuario usuario, Orgao orgao) {
-        this.id = id;
+    public Denuncia(String titulo, String texto, int urgencia, LocalDate data, Tipo tipo, Usuario usuario, Orgao orgao, byte[] imagem) {
         this.titulo = titulo;
         this.texto = texto;
         this.urgencia = urgencia;
@@ -51,14 +47,14 @@ public class Denuncia {
 
     public Denuncia ()
     {
-        this(0L,"","",0,LocalDate.now(),null,null,null);
+        this("","",0,LocalDate.now(),null,null,null, null);
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -124,5 +120,13 @@ public class Denuncia {
 
     public void setFeedback(Feedback feedback) {
         this.feedback = feedback;
+    }
+
+    public byte[] getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(byte[] imagem) {
+        this.imagem = imagem;
     }
 }

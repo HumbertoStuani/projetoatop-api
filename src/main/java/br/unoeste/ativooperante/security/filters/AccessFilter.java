@@ -1,8 +1,8 @@
-package br.unoeste.ativooperante.security;
+package br.unoeste.ativooperante.security.filters;
 
 import java.io.IOException;
 
-import br.unoeste.ativooperante.utils.JWTTokenProvider;
+import br.unoeste.ativooperante.security.utils.JWTTokenProvider;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

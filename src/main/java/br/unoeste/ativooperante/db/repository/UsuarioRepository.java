@@ -1,10 +1,9 @@
 package br.unoeste.ativooperante.db.repository;
 
-import br.unoeste.ativooperante.db.entities.Usuario;
-import org.springframework.data.jpa.repository.JpaRepository;
+import br.unoeste.ativooperante.db.documents.Usuario;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
-public interface UsuarioRepository extends JpaRepository<Usuario,Long> {
-    Optional<Usuario> findByEmail(String email);
+public interface UsuarioRepository extends MongoRepository<Usuario,String> {
 }

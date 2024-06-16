@@ -1,6 +1,6 @@
 package br.unoeste.ativooperante.services;
 
-import br.unoeste.ativooperante.db.entities.Tipo;
+import br.unoeste.ativooperante.db.documents.Tipo;
 import br.unoeste.ativooperante.db.repository.TipoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class TipoService {
         return this.tipoRepository.findAll();
     }
 
-    public Tipo getById(Long idTipo) {
+    public Tipo getById(String idTipo) {
         return this.tipoRepository.findById(idTipo).orElse(null);
     }
 
@@ -27,7 +27,7 @@ public class TipoService {
         return this.tipoRepository.save(tipo);
     }
 
-    public Tipo alterar (Long id, Tipo novo)
+    public Tipo alterar (String id, Tipo novo)
     {
         Tipo tipo = this.tipoRepository.findById(id).orElse(null);
         if(tipo != null) {
@@ -37,7 +37,7 @@ public class TipoService {
         return null;
     }
 
-    public boolean delete (Long id)
+    public boolean delete (String id)
     {
         try {
             this.tipoRepository.deleteById(id);
