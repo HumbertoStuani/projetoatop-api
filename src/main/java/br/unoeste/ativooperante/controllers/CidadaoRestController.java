@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
 @CrossOrigin
@@ -45,14 +46,6 @@ public class CidadaoRestController {
         return new ResponseEntity<>(this.denunciaService.findByUsuario(id), HttpStatus.OK);
     }
 
-    @GetMapping("/denuncia/imagem")
-    public ResponseEntity<Object> getImagem(@RequestParam("id") Long id) {
-        Imagem imagem = this.imagemService.findByDenuncia(id);
-        if (imagem != null)
-            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imagem.getDados());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Imagem não foi fornecida.");
-    }
-
     @PostMapping("/denuncia")
     public ResponseEntity<Object> enviarDenuncia(@RequestHeader(value = "Authorization", required = true) String token, @RequestParam String titulo, @RequestParam String texto,
                                                  @RequestParam int urgencia, @RequestParam String idOrgao, @RequestParam String idTipo, @RequestParam(required = false) MultipartFile imagem) {
@@ -75,21 +68,22 @@ public class CidadaoRestController {
     @GetMapping("/denuncia/{id}/imagem")
     public ResponseEntity<Object> getImagem(@PathVariable String id) {
         Denuncia denuncia = this.denunciaService.findById(id);
-        if (denuncia != null)
+        if (denuncia != null && denuncia.getImagem() != null)
             return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(denuncia.getImagem());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Imagem não foi fornecida.");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Imagem não foi fornecida.");
     }
-    @DeleteMapping("/denuncia")
-    public ResponseEntity<Object> deletarDenuncia(@RequestHeader(value = "Authorization", required = true) String token, @RequestParam Long id) {
-        long usuario_id = JWTTokenProvider.getAllClaimsFromToken(token).get("id", Long.class);
+    
+    @DeleteMapping("/denuncia/{id}")
+    public ResponseEntity<Object> deletarDenuncia(@RequestHeader(value = "Authorization", required = true) String token, @PathVariable String id) {
+        String usuario_id = JWTTokenProvider.getAllClaimsFromToken(token).get("id", String.class);
         Denuncia denuncia = this.denunciaService.findById(id);
         if (denuncia != null ) {
-            if(usuario_id == denuncia.getUsuario().getId()) {
+            if(Objects.equals(usuario_id, denuncia.getUsuario().getId())) {
                 if(this.denunciaService.delete(denuncia))
                     return ResponseEntity.ok().body("Denúncia deletada com sucesso.");
-                return ResponseEntity.badRequest().body("Erro ao exlcuir denúncia.");
+                return ResponseEntity.badRequest().body("Erro ao excluir denúncia.");
             }
-            return ResponseEntity.badRequest().body("Denúncia não foi feita por este usuário.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Denúncia não foi feita por este usuário.");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Denúncia não encontrada.");
     }

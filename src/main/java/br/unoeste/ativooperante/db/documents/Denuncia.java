@@ -1,14 +1,13 @@
 package br.unoeste.ativooperante.db.documents;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Document(collection = "denuncia")
 public class Denuncia {
@@ -33,7 +32,9 @@ public class Denuncia {
     @DBRef
     private Orgao orgao;
     @DBRef
+    @JsonManagedReference
     private Feedback feedback;
+
 
     public Denuncia(String titulo, String texto, int urgencia, LocalDate data, Tipo tipo, Usuario usuario, Orgao orgao, byte[] imagem) {
         this.titulo = titulo;

@@ -9,6 +9,7 @@ import br.unoeste.ativooperante.services.UsuarioService;
 import br.unoeste.ativooperante.config.AppError;
 import br.unoeste.ativooperante.security.utils.JWTTokenProvider;
 import br.unoeste.ativooperante.security.utils.PasswordEncoder;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -78,19 +79,19 @@ public class AccessRestController
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Senha inválida.");
         }
     }
-//
-//    @GetMapping()
-//    public ResponseEntity<Object> caminho(@RequestParam("token") String token) {
-//        Claims claims = JWTTokenProvider.getAllClaimsFromToken(token);
-//        return ResponseEntity.accepted().body(claims.get("nivel", Integer.class));
-//    }
-//
-//    @GetMapping("/session")
-//    public ResponseEntity<Object> ativo(@RequestHeader(value = "Authorization", required = true) String token) {
-//        if(JWTTokenProvider.verifyToken(token))
-//            return ResponseEntity.ok("Sessão ativa.");
-//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Sessão expirada.");
-//    }
+
+    @GetMapping()
+    public ResponseEntity<Object> caminho(@RequestParam("token") String token) {
+        Claims claims = JWTTokenProvider.getAllClaimsFromToken(token);
+        return ResponseEntity.accepted().body(claims.get("nivel", Integer.class));
+    }
+
+    @GetMapping("/session")
+    public ResponseEntity<Object> ativo(@RequestHeader(value = "Authorization", required = true) String token) {
+        if(JWTTokenProvider.verifyToken(token))
+            return ResponseEntity.ok("Sessão ativa.");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Sessão expirada.");
+    }
 
 //    @PostMapping(value = "/register")
 //    public ResponseEntity<Object> registrar(@RequestBody Usuario usuario) {

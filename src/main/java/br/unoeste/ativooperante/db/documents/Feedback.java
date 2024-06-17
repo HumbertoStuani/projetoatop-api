@@ -1,11 +1,15 @@
 package br.unoeste.ativooperante.db.documents;
 
 
+import com.fasterxml.jackson.annotation.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 @Document(collection = "feedback")
 public class Feedback {
 
@@ -15,7 +19,18 @@ public class Feedback {
     private String texto;
 
     @DBRef(lazy = true)
+    @JsonBackReference
     private Denuncia denuncia;
+
+    @JsonIgnore
+    private Object target;
+    @JsonIgnore
+    private Object source;
+
+    @JsonProperty("denunciaId")
+    public String getDenunciaId() {
+        return denuncia != null ? denuncia.getId() : null;
+    }
 
     public Feedback(String texto) {
         this.texto = texto;
