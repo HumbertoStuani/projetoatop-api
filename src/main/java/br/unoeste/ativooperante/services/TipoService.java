@@ -1,8 +1,13 @@
 package br.unoeste.ativooperante.services;
 
+import br.unoeste.ativooperante.db.documents.Denuncia;
+import br.unoeste.ativooperante.db.documents.Orgao;
 import br.unoeste.ativooperante.db.documents.Tipo;
+import br.unoeste.ativooperante.db.repository.DenunciaRepository;
 import br.unoeste.ativooperante.db.repository.TipoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +17,8 @@ public class TipoService {
 
     @Autowired
     private TipoRepository tipoRepository;
+    @Autowired
+    private DenunciaRepository denunciaRepository;
 
     public List<Tipo> getAll()
     {
@@ -37,14 +44,19 @@ public class TipoService {
         return null;
     }
 
-    public boolean delete (String id)
+    public ResponseEntity<Object> delete (String id)
     {
+        Tipo tipo = this.tipoRepository.findById(id).orElse(null);
+        List<Denuncia> denuncias = this.denunciaRepository.findByTipo(tipo);
         try {
+            if(!denuncias.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Há denúncias registradas com este tipo.");
+            }
             this.tipoRepository.deleteById(id);
         }catch (Exception e)
         {
-            return false;
+            return ResponseEntity.badRequest().body("Erro ao excluir.");
         }
-        return true;
+        return ResponseEntity.ok("");
     }
 }

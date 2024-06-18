@@ -24,7 +24,10 @@ public class AccessRestController
     @Autowired
     private UsuarioService usuarioService;
 
-
+    @GetMapping("/")
+    public ResponseEntity<Object> hello() {
+        return ResponseEntity.ok().body("API Ativo Operante 2024 - Gabriel Meiado, Humberto Stuani");
+    }
     @PostMapping(value = "/login")
     public ResponseEntity<Object> logar(@RequestBody Usuario usuarioLogin)
     {
@@ -40,7 +43,7 @@ public class AccessRestController
         }
     }
 
-    @GetMapping()
+    @GetMapping("/path")
     public ResponseEntity<Object> caminho(@RequestParam("token") String token) {
         Claims claims = JWTTokenProvider.getAllClaimsFromToken(token);
         return ResponseEntity.accepted().body(claims.get("nivel", Integer.class));

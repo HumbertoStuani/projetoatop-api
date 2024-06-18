@@ -69,9 +69,7 @@ public class AdminRestController {
 
     @DeleteMapping("/orgao/{id}")
     public ResponseEntity<Object> excluirOrgao(@PathVariable String id) {
-        if(this.orgaoService.delete(id))
-            return new ResponseEntity<>("",HttpStatus.OK);
-        return new ResponseEntity<>("",HttpStatus.BAD_REQUEST);
+        return this.orgaoService.delete(id);
     }
 
 
@@ -102,11 +100,8 @@ public class AdminRestController {
     }
 
     @DeleteMapping(value = "/tipo/{id}")
-    public ResponseEntity<Object> excluirTipo(@PathVariable String id)
-    {
-        if(tipoService.delete(id))
-            return new ResponseEntity<>("Tipo deletado.",HttpStatus.OK);
-        return new ResponseEntity<>("Erro ao excluir.",HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Object> excluirTipo(@PathVariable String id) {
+        return this.tipoService.delete(id);
     }
 
     //CRUD DENUNCIAS - ADMIN
