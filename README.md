@@ -39,7 +39,6 @@ A aplicação expõe uma API RESTful que pode ser utilizada para registrar e ger
 - `GET api/admin/denuncias/{id}` - Lista todas as denúncias em registro.
 - `DELETE api/cidadao/denuncias/{id}` - Remove uma denúncia.
 
-Para detalhes completos sobre todos os endpoints e seus respectivos parâmetros, consulte a documentação da API disponível em `/swagger-ui.html` após iniciar a aplicação.
 
 ## Tecnologias
 
